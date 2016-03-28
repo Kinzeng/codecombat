@@ -61,8 +61,10 @@ UserSchema.methods.isArtisan = ->
 UserSchema.methods.isAnonymous = ->
   @get 'anonymous'
 
+UserSchema.statics.teacherRoles = ['teacher', 'technology coordinator', 'advisor', 'principal', 'superintendent']
+
 UserSchema.methods.isTeacher = ->
-  return @get('role') in ['teacher', 'technology coordinator', 'advisor', 'principal', 'superintendent']
+  return @get('role') in User.teacherRoles
 
 UserSchema.methods.getUserInfo = ->
   id: @get('_id')

@@ -268,6 +268,19 @@ ghlfarghlarghlfarghlarghlfarghlarghlfarghlarghlfarghlarghlfarghlarghlfarghlarghl
       classroom = yield Classroom.findById(classroom.id)
       expect(classroom.get('members').length).toBe(0)
       done()
+      
+  it 'ignores attempts to change away from a teacher role', utils.wrap (done) ->
+    user = yield utils.initUser()
+    yield utils.loginUser(user)
+    url = getURL('/db/user/'+user.id)
+    [res, body] = yield request.putAsync { uri: url, json: { role: 'teacher' }}
+    expect(body.role).toBe('teacher')
+    [res, body] = yield request.putAsync { uri: url, json: { role: 'advisor' }}
+    expect(body.role).toBe('advisor')
+    [res, body] = yield request.putAsync { uri: url, json: { role: 'student' }}
+    expect(body.role).toBe('advisor')
+    done()
+      
 
 describe 'GET /db/user', ->
 
